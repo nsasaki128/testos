@@ -12,3 +12,10 @@
 	%endif
 
 %endmacro
+
+struc drive
+	.no	resw	1
+	.cyln	resw	1
+	.head	resw	1
+	.sect	resw	1
+endstruc
