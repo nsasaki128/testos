@@ -1,4 +1,4 @@
-KBC_DATA_Write:
+KBC_Data_Write:
 
 	;-------------------------------------
 	; Build stack frame
@@ -42,7 +42,7 @@ KBC_DATA_Write:
 
 	ret
 
-KBC_DATA_Read:
+KBC_Data_Read:
 
 	;-------------------------------------
 	; Build stack frame
@@ -69,7 +69,7 @@ KBC_DATA_Read:
 	jz	.20E
 
 	mov	ah,	0x00
-	out	al,	0x60
+	in	al,	0x60
 
 	mov	di,	[bp + 4]
 	mov	[di + 0],	ax
@@ -89,7 +89,7 @@ KBC_DATA_Read:
 
 	ret
 
-KBC_CMD_Write:
+KBC_Cmd_Write:
 
 	;-------------------------------------
 	; Build stack frame
@@ -132,4 +132,3 @@ KBC_CMD_Write:
 	pop	bp
 
 	ret
-
