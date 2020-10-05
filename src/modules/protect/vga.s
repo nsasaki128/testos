@@ -170,3 +170,52 @@ vram_font_copy:
 
 	ret
 
+vram_bit_copy:
+
+	;-------------------------------------
+	; Build stack frame
+	;-------------------------------------
+	push	ebp
+	mov	ebp,	esp
+
+	;-------------------------------------
+	; Save register
+	;-------------------------------------
+	push	eax
+	push	ebx
+	push	edi
+
+	;-------------------------------------
+	; Start process
+	;-------------------------------------
+	mov	edi,	[ebp +12]
+	movzx	eax,	byte [ebp +16]
+	movzx	ebx,	word [ebp +20]
+
+	mov	bl,	al
+	setz	bl
+	dec	bl
+
+	mov	al,	[ebp + 8]
+	mov	ah,	al
+	not	ah
+
+	and	ah,	[edi]
+	and	al,	bl
+	or	al,	ah
+	mov	[edi],	al
+
+	;-------------------------------------
+	; Recover register
+	;-------------------------------------
+	pop	edi
+	pop	ebx
+	pop	eax
+
+	;-------------------------------------
+	; Scrap stack frame
+	;-------------------------------------
+	mov	esp,	ebp
+	pop	ebp
+
+	ret
