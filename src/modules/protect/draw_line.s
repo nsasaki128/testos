@@ -97,9 +97,18 @@ draw_line:
 	; Draw line
 	;-------------------------------------
 .50L:
+%ifdef  USE_SYSTEM_CALL
+	mov eax, ecx
+	mov ebx, [ebp + 24]
+	mov ecx, [ebp - 8]
+	mov edx, [ebp - 20]
+	int 0x82
+	mov ecx, eax
+%else
 	cdecl	draw_pixel,	dword [ebp - 8], \
 				dword [ebp -20], \
 				dword [ebp +24]
+%endif
 
 	mov	eax,	[esi - 8]
 	add	[esi - 0],	eax
