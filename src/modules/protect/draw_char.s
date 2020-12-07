@@ -17,6 +17,13 @@ draw_char:
 	push	edi
 
 	;-------------------------------------
+	; Test and set
+	;-------------------------------------
+%ifdef	USE_TEST_AND_SET
+	cdecl	test_and_set, IN_USE
+%endif
+
+	;-------------------------------------
 	; Set copy src address
 	;-------------------------------------
 	movzx	esi,	byte [ebp +20]
@@ -54,6 +61,12 @@ draw_char:
 	cdecl	vram_font_copy,	esi,	edi,	0x01,	ebx
 
 	;-------------------------------------
+	; Clear test and set
+	;-------------------------------------
+%ifdef	USE_TEST_AND_SET
+	mov [IN_USE],	dword	0
+%endif
+	;-------------------------------------
 	; Recover register
 	;-------------------------------------
 	pop	edi
@@ -71,3 +84,5 @@ draw_char:
 
 	ret
 
+ALIGN 4,	db	0
+IN_USE:	dd	0
