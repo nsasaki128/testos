@@ -74,7 +74,6 @@ itoa:
 	mov	edx,	0
 	div	ebx
 
-
 	mov	esi,	edx
 	mov	dl,	byte	[.ascii + esi]
 

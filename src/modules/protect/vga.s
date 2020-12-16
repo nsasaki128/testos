@@ -192,7 +192,7 @@ vram_bit_copy:
 	movzx	eax,	byte [ebp +16]
 	movzx	ebx,	word [ebp +20]
 
-	mov	bl,	al
+	test	bl,	al
 	setz	bl
 	dec	bl
 

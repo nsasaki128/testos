@@ -1,63 +1,55 @@
-draw_rect:
-
+int_pf:
 	;-------------------------------------
 	; Build stack frame
 	;-------------------------------------
 	push	ebp
 	mov	ebp,	esp
 
-
 	;-------------------------------------
 	; Save register
 	;-------------------------------------
-	push	eax
-	push	ebx
-	push	ecx
-	push	edx
-	push	esi
+	pusha
+	push	ds
+	push	es
 
 	;-------------------------------------
-	; Start process
+	; Check the adress where exception happened
 	;-------------------------------------
-	mov	eax,	[ebp + 8]
-	mov	ebx,	[ebp +12]
-	mov	ecx,	[ebp +16]
-	mov	edx,	[ebp +20]
-	mov	esi,	[ebp +24]
+	mov	eax,	cr2
+	and	eax,	~0x0FFF
+	cmp	eax,	0x0010_7000
+	jne	.10F
+
+	mov	[0x00106000 + 0x107 * 4],	dword	0x00107007
+	cdecl	memcpy,	0x0010_7000,	DRAW_PARAM,	rose_size
+
+	jmp	.10E
+.10F:
+	;-------------------------------------
+	; Adjust register
+	;-------------------------------------
+	add	esp,	4
+	add	esp,	4
+	popa
+	pop	ebp
 
 	;-------------------------------------
-	; Decide coordinate axes
+	; Task finish process
 	;-------------------------------------
-	cmp	eax,	ecx
-	jl	.10E
-	xchg	eax,	ecx
+	pushf
+	push	cs
+	push	int_stop
+
+	mov	eax,	.s0
+	iret
+
 .10E:
-	cmp	ebx,	edx
-	jl	.20E
-	xchg	ebx,	edx
-.20E:
-
-	;-------------------------------------
-	; Draw rectangle
-	;-------------------------------------
-	cdecl	draw_line,	eax,	ebx,	ecx,	ebx,	esi
-	cdecl	draw_line,	eax,	ebx,	eax,	edx,	esi
-
-	dec	edx
-	cdecl	draw_line,	eax,	edx,	ecx,	edx,	esi
-	inc	edx
-
-	dec	ecx
-	cdecl	draw_line,	ecx,	ebx,	ecx,	edx,	esi
-
 	;-------------------------------------
 	; Recover register
 	;-------------------------------------
-	pop	esi
-	pop	edx
-	pop	ecx
-	pop	ebx
-	pop	eax
+	pop	es
+	pop	ds
+	popa
 
 	;-------------------------------------
 	; Scrap stack frame
@@ -65,5 +57,10 @@ draw_rect:
 	mov	esp,	ebp
 	pop	ebp
 
-	ret
+	;-------------------------------------
+	; Scrap error code
+	;-------------------------------------
+	add	esp,	4
+	iret
 
+.s0	db	" < PAGE FAULT > ",	0

@@ -14,7 +14,6 @@ draw_str:
 	push	ecx
 	push	edx
 	push	esi
-	push	edi
 
 	;-------------------------------------
 	; Start Process
@@ -52,7 +51,6 @@ draw_str:
 	;-------------------------------------
 	; Recover register
 	;-------------------------------------
-	pop	edi
 	pop	esi
 	pop	edx
 	pop	ecx
